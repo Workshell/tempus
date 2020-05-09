@@ -2,8 +2,47 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>Workshell.snk</AssemblyOriginatorKeyFile>
+    <Configurations>Debug;Release;CI</Configurations>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Workshell.Tempus</PackageId>
+    <PackageDescription>A simple .NET job scheduler along the lines of Hangfire or Quartz but with a reduced feature set and simpler API.</PackageDescription>
+    <PackageProjectUrl>https://github.com/Workshell/tempus</PackageProjectUrl>
+    <PackageIconUrl>https://img.workshell.co.uk/logo_128.png</PackageIconUrl>
+    <PackageTags>workshell tempus job scheduler cron hangifre</PackageTags>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <Copyright>Workshell Ltd</Copyright>
+    <Authors>Workshell Ltd</Authors>
+    <RepositoryUrl>https://github.com/Workshell/tempus</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>0.0.0.1</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\license.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\debug</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CI|AnyCPU'">
+    <OutputPath>..\..\bin\ci</OutputPath>
+    <DefineConstants>TRACE;SIGNED</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Cronos" Version="0.7.0" />

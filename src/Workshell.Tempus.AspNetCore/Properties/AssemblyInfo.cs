@@ -20,14 +20,7 @@
 //  SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 
-namespace Workshell.Tempus
-{
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class NoOverlapAttribute : Attribute
-    {
-    }
-}
+[assembly: AssemblyTitle("Workshell.Tempus.AspNetCore")]
+[assembly: AssemblyDescription("ASP.NET Core support for Workshell Tempus")]

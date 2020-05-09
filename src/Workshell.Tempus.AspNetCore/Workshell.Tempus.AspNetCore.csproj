@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>Workshell.snk</AssemblyOriginatorKeyFile>
+    <Configurations>Debug;Release;CI</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,8 +13,44 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <PackageId>Workshell.Tempus.AspNetCore</PackageId>
+    <PackageDescription>ASP.NET Core support for Workshell Tempus</PackageDescription>
+    <PackageProjectUrl>https://github.com/Workshell/tempus</PackageProjectUrl>
+    <PackageIconUrl>https://img.workshell.co.uk/logo_128.png</PackageIconUrl>
+    <PackageTags>workshell tempus job scheduler hangfire</PackageTags>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <Copyright>Workshell Ltd</Copyright>
+    <Authors>Workshell Ltd</Authors>
+    <RepositoryUrl>https://github.com/Workshell/tempus</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Version>0.0.0.1</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\license.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\debug</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\release</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='CI|AnyCPU'">
+    <OutputPath>..\..\bin\ci</OutputPath>
+    <DefineConstants>TRACE;SIGNED</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Workshell.Tempus\Workshell.Tempus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
   </ItemGroup>
 
 </Project>

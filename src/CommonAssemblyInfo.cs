@@ -1,4 +1,4 @@
-ï»¿#region License
+#region License
 //  Copyright(c) Workshell Ltd
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,14 +20,15 @@
 //  SOFTWARE.
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 
-namespace Workshell.Tempus
-{
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class NoOverlapAttribute : Attribute
-    {
-    }
-}
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Workshell Ltd")]
+[assembly: AssemblyProduct("Tempus - A .NET Job Scheduler")]
+[assembly: AssemblyCopyright("Copyright © Workshell Ltd")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+[assembly: AssemblyVersion("0.0.0.1")]
+[assembly: AssemblyFileVersion("0.0.0.1")]
+[assembly: AssemblyInformationalVersion("0.0.0.1")]
