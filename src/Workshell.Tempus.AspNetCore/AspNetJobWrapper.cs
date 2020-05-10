@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 //  Copyright(c) Workshell Ltd
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,14 +39,14 @@ namespace Workshell.Tempus.AspNetCore
 
             Pattern = null;
             Type = type;
-            Executor = null;
+            Handler = null;
         }
 
-        public AspNetJobWrapper(string pattern, Func<JobExecutionContext, Task> executor, OverlapHandling overlapHandling)
+        public AspNetJobWrapper(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
         {
             Pattern = pattern;
             Type = null;
-            Executor = executor;
+            Handler = handler;
             OverlapHandling = overlapHandling;
         }
 
@@ -54,7 +54,7 @@ namespace Workshell.Tempus.AspNetCore
 
         public string Pattern { get; }
         public Type Type { get; }
-        public Func<JobExecutionContext, Task> Executor { get; }
+        public Func<JobExecutionContext, Task> Handler { get; }
         public OverlapHandling OverlapHandling { get; }
 
         #endregion

@@ -20,14 +20,23 @@
 //  SOFTWARE.
 #endregion
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-[assembly: AssemblyTitle("Workshell.Tempus")]
-[assembly: AssemblyDescription("Tempus - A .NET Job Scheduler")]
+namespace Workshell.Tempus
+{
+    public interface IJobRunner
+    {
+        #region Methods
 
-#if !SIGNED
-[assembly: InternalsVisibleTo("Workshell.Tempus.AspNetCore")]
-#else
-[assembly: InternalsVisibleTo("Workshell.Tempus.AspNetCore, PublicKey=0024000004800000940000000602000000240000525341310004000001000100ed0db04e6ef7cb7ae6c0dbecb36b42bc629609ae4f059d5aacd1f467be55281c480336bfd79e4c28a5304ccb6448502b5c4f5184dcf76f264ea7d2f78f6e7ab134ca12d526e2257b2ee88b8429dc7ace03ad9c21b6b2710ca2b82e770e62683382924c50f7e554402e838dd4fd90bfcc2ec730ef2cb9c9c9b9992061d37ed789")]
-#endif
+        Task Run(Action action);
+        Task Run(Action action, CancellationToken cancellationToken);
+        Task Run(Func<Task> func);
+        Task Run(Func<Task> func, CancellationToken cancellationToken);
+
+        #endregion
+    }
+}

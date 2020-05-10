@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 //  Copyright(c) Workshell Ltd
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,10 +31,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Workshell.Tempus.AspNetCore
 {
-    internal sealed class TempusBackgroundService : IDisposable, IHostedService
+    internal sealed class TempusBackgroundService : IHostedService
     {
         private readonly IJobScheduler _scheduler;
-        private volatile bool _disposed;
 
         public TempusBackgroundService(IServiceProvider services, IJobScheduler scheduler)
         {
@@ -48,7 +47,7 @@ namespace Workshell.Tempus.AspNetCore
                 }
                 else
                 {
-                    scheduler.Schedule(wrapper.Pattern, wrapper.Executor, wrapper.OverlapHandling);
+                    scheduler.Schedule(wrapper.Pattern, wrapper.Handler, wrapper.OverlapHandling);
                 }
             }
 
@@ -57,20 +56,7 @@ namespace Workshell.Tempus.AspNetCore
 
         #region Methods
 
-        public void Dispose()
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            //_scheduler.Dispose(); -- We get this from DI so probably don't want to dispose it
-            GC.SuppressFinalize(this);
-
-            _disposed = true;
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken)
         {
             _scheduler.Start();
 

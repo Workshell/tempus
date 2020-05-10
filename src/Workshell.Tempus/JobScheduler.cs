@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 //  Copyright(c) Workshell Ltd
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,6 +40,7 @@ namespace Workshell.Tempus
         private CancellationTokenSource _cts;
         private Timer _timer;
         private IJobFactory _factory;
+        private IJobRunner _runner;
 
         static JobScheduler()
         {
@@ -47,7 +48,7 @@ namespace Workshell.Tempus
             _scheduler = null;
         }
 
-        private JobScheduler(IJobFactory factory)
+        private JobScheduler(IJobFactory factory, IJobRunner runner)
         {
             _jobs = new ScheduledJobs();
             _activeJobs = new ActiveJobs();
@@ -55,17 +56,18 @@ namespace Workshell.Tempus
             _cts = null;
             _timer = null;
             _factory = factory;
+            _runner = runner;
         }
 
         #region Static Methods
 
-        public static IJobScheduler Create(IJobFactory factory = null)
+        public static IJobScheduler Create(IJobFactory factory = null, IJobRunner runner = null)
         {
             lock (_locker)
             {
                 if (_scheduler == null)
                 {
-                    _scheduler = new JobScheduler(factory ?? new JobFactory());
+                    _scheduler = new JobScheduler(factory ?? new JobFactory(), runner ?? new JobRunner());
                 }
 
                 return _scheduler;
@@ -91,41 +93,53 @@ namespace Workshell.Tempus
 
         public void Start()
         {
+            OnStarting();
+
+            if (Volatile.Read(ref _cts) != null)
+            {
+                return;
+            }
+
             lock (_locker)
             {
-                if (_cts != null)
-                {
-                    return;
-                }
-
                 _cts = new CancellationTokenSource();
-                _timer = new Timer(OnTimer, null, 0, 1000);
+                _timer = new Timer(TimerElapsed, null, 0, 1000);
             }
+
+            OnStarted();
         }
 
-        public void Stop()
+        public void Stop(bool wait = false)
         {
+            OnStopping();
+
+            if (Volatile.Read(ref _cts) == null)
+            {
+                return;
+            }
+
             lock (_locker)
             {
-                if (_cts == null)
-                {
-                    return;
-                }
-
-                _timer.Dispose();
-                _cts.Cancel();
-                _cts.Dispose();
-
-                _timer = null;
-                _cts = null;
+                _timer.Dispose(() => _timer = null);
+                _cts.Dispose(() => _cts = null);
             }
+
+            if (wait)
+            {
+                while (_activeJobs.Count > 0)
+                {
+                    Thread.Sleep(100);
+                }
+            }
+
+            OnStopped();
         }
         
         public Guid Schedule(Type type)
         {
             if (!typeof(IJob).GetTypeInfo().IsAssignableFrom(type))
             {
-                throw new Exception("Type is not an IJob.");
+                throw new ArgumentException("Type is not an IJob.", nameof(type));
             }
 
             var job = _jobs.Add(type);
@@ -150,20 +164,26 @@ namespace Workshell.Tempus
             return _jobs.Remove(id);
         }
 
-        private void OnTimer(object state)
+        private void TimerElapsed(object state)
         {
-            var factory = Interlocked.Exchange(ref _factory, _factory);
+            var factory = Volatile.Read(ref _factory);
+            var runner = Volatile.Read(ref _runner);
             var jobs = _jobs.Next(DateTime.UtcNow);
 
             foreach (var job in jobs)
             {
-                ExecuteJob(factory, job);
+                ExecuteJob(factory, runner, job);
             }
         }
 
-        private void ExecuteJob(IJobFactory factory, ScheduledJob job)
+        private void ExecuteJob(IJobFactory factory, IJobRunner runner, ScheduledJob job)
         {
-            Task.Run(async () =>
+            if (!OnJobStarting(job))
+            {
+                return;
+            }
+
+            runner.Run(async () =>
             {
                 if (job.OverlapHandling == OverlapHandling.Skip && _activeJobs.Contains(job))
                 {
@@ -180,19 +200,33 @@ namespace Workshell.Tempus
                 {
                     var context = new JobExecutionContext(this, activeJob.Token);
 
-                    if (!job.IsAnonymous)
-                    {
-                        using (var scope = factory.CreateScope())
-                        {
-                            var instance = scope.Create(job.Type);
+                    OnJobStarted(context);
 
-                            await instance.ExecuteAsync(context);
+                    try
+                    {
+                        if (!job.IsAnonymous)
+                        {
+                            using (var scope = factory.CreateScope())
+                            {
+                                var instance = scope.Create(job.Type);
+
+                                await instance.ExecuteAsync(context);
+                            }
+                        }
+                        else
+                        {
+                            await job.Handler(context);
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        await job.Handler(context);
+                        if (OnJobError(context, ex))
+                        {
+                            throw;
+                        }
                     }
+
+                    OnJobFinished(job);
                 }
                 finally
                 {
@@ -222,23 +256,129 @@ namespace Workshell.Tempus
             Monitor.Exit(job);
         }
 
+        private void OnStarting()
+        {
+            var handler = Volatile.Read(ref Starting);
+
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnStarted()
+        {
+            var handler = Volatile.Read(ref Started);
+
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnStopping()
+        {
+            var handler = Volatile.Read(ref Stopping);
+
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnStopped()
+        {
+            var handler = Volatile.Read(ref Stopped);
+
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+
+        private bool OnJobStarting(IScheduledJob job)
+        {
+            var startingHandler = Volatile.Read(ref JobStarting);
+
+            if (startingHandler != null)
+            {
+                var startingArgs = new JobStartingEventArgs(job);
+
+                startingHandler.Invoke(this, startingArgs);
+
+                if (startingArgs.Cancel)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void OnJobStarted(JobExecutionContext context)
+        {
+            var startedHandler = Volatile.Read(ref JobStarted);
+
+            startedHandler?.Invoke(this, new JobStartedEventArgs(context));
+        }
+
+        private void OnJobFinished(IScheduledJob job)
+        {
+            var finishedHandler = Volatile.Read(ref JobFinished);
+
+            finishedHandler?.Invoke(this, new JobEventArgs(job));
+        }
+
+        private bool OnJobError(JobExecutionContext context, Exception ex)
+        {
+            var errorHandler = Volatile.Read(ref JobError);
+
+            if (errorHandler == null)
+            {
+                return false;
+            }
+
+            var errorArgs = new JobErrorEventArgs(context, ex);
+
+            errorHandler.Invoke(this, errorArgs);
+
+            if (errorArgs.Rethrow)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         #endregion
 
         #region Properties
 
         public IJobFactory Factory
         {
-            get => Interlocked.Exchange(ref _factory, _factory);
+            get => Volatile.Read<IJobFactory>(ref _factory);
             set
             {
                 var factory = value ?? new JobFactory();
 
-                Interlocked.Exchange(ref _factory, factory);
+                Volatile.Write<IJobFactory>(ref _factory, factory);
+            }
+        }
+
+        public IJobRunner Runner
+        {
+            get => Volatile.Read<IJobRunner>(ref _runner);
+            set
+            {
+                var runner = value ?? new JobRunner();
+
+                Volatile.Write<IJobRunner>(ref _runner, runner);
             }
         }
 
         public IScheduledJobs ScheduledJobs => _jobs;
         public IActiveJobs ActiveJobs => _activeJobs;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler Starting;
+        public event EventHandler Started;
+        public event EventHandler Stopping;
+        public event EventHandler Stopped;
+        public event JobStartingEventHandler JobStarting;
+        public event JobStartedEventHandler JobStarted;
+        public event JobEventHandler JobFinished;
+        public event JobErrorEventHandler JobError;
 
         #endregion
     }

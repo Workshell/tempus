@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 //  Copyright(c) Workshell Ltd
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,12 +27,17 @@ using System.Threading.Tasks;
 
 namespace Workshell.Tempus
 {
+    public delegate void JobStartingEventHandler(object sender, JobStartingEventArgs e);
+    public delegate void JobStartedEventHandler(object sender, JobStartedEventArgs e);
+    public delegate void JobEventHandler(object sender, JobEventArgs e);
+    public delegate void JobErrorEventHandler(object sender, JobErrorEventArgs e);
+
     public interface IJobScheduler : IDisposable
     {
         #region Methods
 
         void Start();
-        void Stop();
+        void Stop(bool wait = false);
         Guid Schedule(Type type);
         Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow);
         bool Unschedule(Guid id);
@@ -42,8 +47,22 @@ namespace Workshell.Tempus
         #region Properties
 
         IJobFactory Factory { get; set; }
+        IJobRunner Runner { get; set; }
         IScheduledJobs ScheduledJobs { get; }
         IActiveJobs ActiveJobs { get; }
+
+        #endregion
+
+        #region Events
+
+        event EventHandler Starting;
+        event EventHandler Started;
+        event EventHandler Stopping;
+        event EventHandler Stopped;
+        event JobStartingEventHandler JobStarting;
+        event JobStartedEventHandler JobStarted;
+        event JobEventHandler JobFinished;
+        event JobErrorEventHandler JobError;
 
         #endregion
     }

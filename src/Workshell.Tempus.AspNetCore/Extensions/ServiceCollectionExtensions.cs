@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 //  Copyright(c) Workshell Ltd
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,17 +34,38 @@ namespace Workshell.Tempus.AspNetCore.Extensions
     {
         #region Methods
 
-        public static IServiceCollection AddTempus(this IServiceCollection services, bool backgroundService = true)
+        public static IServiceCollection AddTempus(this IServiceCollection services, Action<TempusOptions> configure = null)
         {
-            services.AddSingleton<IJobFactory, AspNetJobFactory>();
+            var options = new TempusOptions();
+
+            configure?.Invoke(options);
+
+            if (options.Factory == null)
+            {
+                services.AddSingleton<IJobFactory, AspNetJobFactory>();
+            }
+            else
+            {
+                services.AddSingleton<IJobFactory>(options.Factory);
+            }
+
+            if (options.Runner == null)
+            {
+                services.AddSingleton<IJobRunner, JobRunner>();
+            }
+            else
+            {
+                services.AddSingleton<IJobRunner>(options.Runner);
+            }
+
             services.AddSingleton<IJobScheduler>(provider =>
             {
-                var scheduler = JobScheduler.Create(provider.GetService<IJobFactory>());
+                var scheduler = JobScheduler.Create(provider.GetService<IJobFactory>(), provider.GetService<IJobRunner>());
 
                 return scheduler;
             });
 
-            if (backgroundService)
+            if (options.RegisterBackgroundService)
             {
                 services.AddSingleton<IHostedService, TempusBackgroundService>();
             }
@@ -177,3 +198,4 @@ namespace Workshell.Tempus.AspNetCore.Extensions
         #endregion
     }
 }
+
