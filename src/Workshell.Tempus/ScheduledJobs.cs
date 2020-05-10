@@ -52,7 +52,7 @@ namespace Workshell.Tempus
 
                 if (existingJob)
                 {
-                    throw new TempusException("The job type is already scheduled.");
+                    throw new TempusException("The job is already scheduled.");
                 }
 
                 _locker.EnterWriteLock();
@@ -138,7 +138,7 @@ namespace Workshell.Tempus
             }
         }
 
-        public ScheduledJob[] Next(Action<Guid[]> removedCallback = null)
+        public ScheduledJob[] Next()
         {
             return Next(DateTime.UtcNow);
         }

@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8686DC99-FF1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C2B21C4E-7807-4BEF-A1C6-FCBF75A73A66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshell.Tempus", "src\Workshell.Tempus\Workshell.Tempus.csproj", "{A6573CB7-61BE-494D-B1DD-F82F64DB1050}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workshell.Tempus", "src\Workshell.Tempus\Workshell.Tempus.csproj", "{A6573CB7-61BE-494D-B1DD-F82F64DB1050}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshell.Tempus.AspNetCore", "src\Workshell.Tempus.AspNetCore\Workshell.Tempus.AspNetCore.csproj", "{91D11A6F-D800-4E97-93D5-3030311F7B2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Workshell.Tempus.AspNetCore", "src\Workshell.Tempus.AspNetCore\Workshell.Tempus.AspNetCore.csproj", "{91D11A6F-D800-4E97-93D5-3030311F7B2B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2CF38C9F-7D88-4F60-B7F8-BD04376E8BD3}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 		version.txt = version.txt
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workshell.Tempus.Tests", "tests\Workshell.Tempus.Tests\Workshell.Tempus.Tests.csproj", "{DD1FDAAB-373D-44F6-B3AD-404D486F7EE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{91D11A6F-D800-4E97-93D5-3030311F7B2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91D11A6F-D800-4E97-93D5-3030311F7B2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91D11A6F-D800-4E97-93D5-3030311F7B2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1FDAAB-373D-44F6-B3AD-404D486F7EE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD1FDAAB-373D-44F6-B3AD-404D486F7EE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD1FDAAB-373D-44F6-B3AD-404D486F7EE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD1FDAAB-373D-44F6-B3AD-404D486F7EE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,6 +46,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A6573CB7-61BE-494D-B1DD-F82F64DB1050} = {8686DC99-FF1E-4A03-8765-5013DA333BC4}
 		{91D11A6F-D800-4E97-93D5-3030311F7B2B} = {8686DC99-FF1E-4A03-8765-5013DA333BC4}
+		{DD1FDAAB-373D-44F6-B3AD-404D486F7EE4} = {C2B21C4E-7807-4BEF-A1C6-FCBF75A73A66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CC5E1CC-A02C-4E58-B3C2-E722CA851706}

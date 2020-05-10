@@ -95,7 +95,7 @@ namespace Workshell.Tempus
             IsImmediately = (pattern == "@immediately");
             IsOnce = pattern.StartsWith("@once ");
             IsAnonymous = true;
-            OverlapHandling = OverlapHandling.Allow;
+            OverlapHandling = overlapHandling;
         }
 
         #region Methods
