@@ -22,40 +22,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Workshell.Tempus.AspNetCore
+namespace Workshell.Tempus
 {
-    internal sealed class AspNetJobWrapper
+    public interface IJobRunner
     {
-        public AspNetJobWrapper(Type type)
-        {
-            if (!typeof(IJob).GetTypeInfo().IsAssignableFrom(type))
-            {
-                throw new ArgumentException("Specified type does not support IJob.");
-            }
+        #region Methods
 
-            Pattern = null;
-            Type = type;
-            Handler = null;
-        }
-
-        public AspNetJobWrapper(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
-        {
-            Pattern = pattern;
-            Type = null;
-            Handler = handler;
-            OverlapHandling = overlapHandling;
-        }
-
-        #region Properties
-
-        public string Pattern { get; }
-        public Type Type { get; }
-        public Func<JobExecutionContext, Task> Handler { get; }
-        public OverlapHandling OverlapHandling { get; }
+        Task Run(Action action);
+        Task Run(Action action, CancellationToken cancellationToken);
+        Task Run(Func<Task> func);
+        Task Run(Func<Task> func, CancellationToken cancellationToken);
 
         #endregion
     }
