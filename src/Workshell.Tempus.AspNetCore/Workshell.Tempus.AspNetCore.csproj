@@ -18,17 +18,14 @@
     <PackageDescription>ASP.NET Core support for Workshell Tempus</PackageDescription>
     <PackageProjectUrl>https://github.com/Workshell/tempus</PackageProjectUrl>
     <PackageIconUrl>https://img.workshell.co.uk/logo_128.png</PackageIconUrl>
-    <PackageTags>workshell tempus job scheduler hangfire</PackageTags>
-    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageTags>Workshell Tempus Hangfire Long-Running Background Fire-And-Forget Delayed Recurring Tasks Jobs Scheduler Threading Queues AspNet MVC AspNetCore</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Workshell Ltd</Copyright>
     <Authors>Workshell Ltd</Authors>
     <RepositoryUrl>https://github.com/Workshell/tempus</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>0.0.0.1</Version>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\..\license.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
-  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\bin\debug</OutputPath>

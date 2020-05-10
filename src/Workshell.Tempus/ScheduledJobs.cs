@@ -76,9 +76,9 @@ namespace Workshell.Tempus
             }
         }
 
-        public IScheduledJob Add(string pattern, Func<JobExecutionContext, Task> handler, bool noOverlap = false)
+        public IScheduledJob Add(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
-            var job = new ScheduledJob(pattern, handler, noOverlap);
+            var job = new ScheduledJob(pattern, handler, overlapHandling);
 
             _locker.EnterWriteLock();
 

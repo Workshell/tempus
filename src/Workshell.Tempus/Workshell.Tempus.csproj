@@ -13,17 +13,14 @@
     <PackageDescription>A simple .NET job scheduler along the lines of Hangfire or Quartz but with a reduced feature set and simpler API.</PackageDescription>
     <PackageProjectUrl>https://github.com/Workshell/tempus</PackageProjectUrl>
     <PackageIconUrl>https://img.workshell.co.uk/logo_128.png</PackageIconUrl>
-    <PackageTags>workshell tempus job scheduler cron hangifre</PackageTags>
-    <PackageLicenseFile>license.txt</PackageLicenseFile>
+    <PackageTags>Workshell Tempus Hangfire Long-Running Background Fire-And-Forget Delayed Recurring Tasks Jobs Scheduler Threading Queues</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Workshell Ltd</Copyright>
     <Authors>Workshell Ltd</Authors>
     <RepositoryUrl>https://github.com/Workshell/tempus</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>0.0.0.1</Version>
   </PropertyGroup>
-  <ItemGroup>
-    <None Include="..\..\license.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
-  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\bin\debug</OutputPath>

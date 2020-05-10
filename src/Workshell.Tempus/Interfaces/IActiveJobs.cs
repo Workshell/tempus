@@ -30,6 +30,7 @@ namespace Workshell.Tempus
     {
         #region Methods
 
+        bool Contains(IScheduledJob job);
         IActiveJob[] ToArray(ActiveJobOrder order = ActiveJobOrder.StartedOldest);
 
         #endregion
