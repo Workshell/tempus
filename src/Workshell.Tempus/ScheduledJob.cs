@@ -65,10 +65,10 @@ namespace Workshell.Tempus
             IsImmediately = (pattern == "@immediately");
             IsOnce = pattern.StartsWith("@once ");
             IsAnonymous = false;
-            NoOverlap = HasNoOverlap(type);
+            OverlapHandling = GetOverlapHandling(type);
         }
 
-        public ScheduledJob(string pattern, Func<JobExecutionContext, Task> handler, bool noOverlap = false)
+        public ScheduledJob(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
         {
             if (pattern == "@immediately")
             {
@@ -95,7 +95,7 @@ namespace Workshell.Tempus
             IsImmediately = (pattern == "@immediately");
             IsOnce = pattern.StartsWith("@once ");
             IsAnonymous = true;
-            NoOverlap = noOverlap;
+            OverlapHandling = OverlapHandling.Allow;
         }
 
         #region Methods
@@ -148,22 +148,22 @@ namespace Workshell.Tempus
             return string.Join("; ", results);
         }
 
-        private bool HasNoOverlap(Type type)
+        private OverlapHandling GetOverlapHandling(Type type)
         {
             if (type == null)
             {
-                return false;
+                return OverlapHandling.Allow;
             }
 
             var attributes = type.GetTypeInfo().GetCustomAttributes();
-            var attribute = attributes.FirstOrDefault(_ => _ is NoOverlapAttribute);
+            var attribute = (OverlapAttribute)attributes.FirstOrDefault(_ => _ is OverlapAttribute);
 
             if (attribute == null)
             {
-                return false;
+                return OverlapHandling.Allow;
             }
 
-            return true;
+            return attribute.Handling;
         }
 
         private string GetPattern(Type type)
@@ -209,7 +209,7 @@ namespace Workshell.Tempus
         public bool IsImmediately { get; }
         public bool IsOnce { get; }
         public bool IsAnonymous { get; }
-        public bool NoOverlap { get; }
+        public OverlapHandling OverlapHandling { get; }
 
         #endregion
     }

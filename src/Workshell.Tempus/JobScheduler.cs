@@ -31,8 +31,9 @@ namespace Workshell.Tempus
 {
     public sealed class JobScheduler : IJobScheduler
     {
+        private static readonly object _locker;
+        private static IJobScheduler _scheduler;
 
-        private readonly object _locker;
         private readonly ScheduledJobs _jobs;
         private readonly ActiveJobs _activeJobs;
         private volatile bool _disposed;
@@ -40,9 +41,14 @@ namespace Workshell.Tempus
         private Timer _timer;
         private IJobFactory _factory;
 
-        private JobScheduler(IJobFactory factory)
+        static JobScheduler()
         {
             _locker = new object();
+            _scheduler = null;
+        }
+
+        private JobScheduler(IJobFactory factory)
+        {
             _jobs = new ScheduledJobs();
             _activeJobs = new ActiveJobs();
             _disposed = false;
@@ -55,7 +61,15 @@ namespace Workshell.Tempus
 
         public static IJobScheduler Create(IJobFactory factory = null)
         {
-            return new JobScheduler(factory ?? new JobFactory());
+            lock (_locker)
+            {
+                if (_scheduler == null)
+                {
+                    _scheduler = new JobScheduler(factory ?? new JobFactory());
+                }
+
+                return _scheduler;
+            }
         }
 
         #endregion
@@ -119,14 +133,14 @@ namespace Workshell.Tempus
             return job.Id;
         }
         
-        public Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, bool noOverlap = false)
+        public Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             if (handler == null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            var job = _jobs.Add(pattern, handler, noOverlap);
+            var job = _jobs.Add(pattern, handler, overlapHandling);
 
             return job.Id;
         }
@@ -151,10 +165,16 @@ namespace Workshell.Tempus
         {
             Task.Run(async () =>
             {
+                if (job.OverlapHandling == OverlapHandling.Skip && _activeJobs.Contains(job))
+                {
+                    return;
+                }
+
+                Lock(job);
+
                 var activeJob = new ActiveJob(job, _cts.Token);
 
                 _activeJobs.Add(activeJob);
-                Lock(job);
 
                 try
                 {
@@ -176,15 +196,15 @@ namespace Workshell.Tempus
                 }
                 finally
                 {
-                    Unlock(job);
                     _activeJobs.Remove(activeJob);
+                    Unlock(job);
                 }
             });
         }
 
         private void Lock(ScheduledJob job)
         {
-            if (!job.NoOverlap)
+            if (job.OverlapHandling != OverlapHandling.Wait)
             {
                 return;
             }
@@ -194,7 +214,7 @@ namespace Workshell.Tempus
 
         private void Unlock(ScheduledJob job)
         {
-            if (!job.NoOverlap)
+            if (job.OverlapHandling != OverlapHandling.Wait)
             {
                 return;
             }

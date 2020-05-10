@@ -60,7 +60,7 @@ namespace Workshell.Tempus.AspNetCore.Extensions
             return services;
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, Action handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, Action handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) =>
             {
@@ -69,10 +69,10 @@ namespace Workshell.Tempus.AspNetCore.Extensions
                 return Task.CompletedTask;
             };
 
-            return AddTempusJob(services, funcHandler, noOverlap);
+            return AddTempusJob(services, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, Action<JobExecutionContext> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, Action<JobExecutionContext> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) =>
             {
@@ -81,24 +81,24 @@ namespace Workshell.Tempus.AspNetCore.Extensions
                 return Task.CompletedTask;
             };
 
-            return AddTempusJob(services, funcHandler, noOverlap);
+            return AddTempusJob(services, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, Func<Task> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, Func<Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) => handler();
 
-            return AddTempusJob(services, funcHandler, noOverlap);
+            return AddTempusJob(services, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, Func<JobExecutionContext, Task> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
-            services.AddTransient<AspNetJobWrapper>(provider => new AspNetJobWrapper("@immediately", handler, noOverlap));
+            services.AddTransient<AspNetJobWrapper>(provider => new AspNetJobWrapper("@immediately", handler, overlapHandling));
 
             return services;
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Action handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Action handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) =>
             {
@@ -107,10 +107,10 @@ namespace Workshell.Tempus.AspNetCore.Extensions
                 return Task.CompletedTask;
             };
 
-            return AddTempusJob(services, when, funcHandler, noOverlap);
+            return AddTempusJob(services, when, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Action<JobExecutionContext> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Action<JobExecutionContext> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) =>
             {
@@ -119,24 +119,24 @@ namespace Workshell.Tempus.AspNetCore.Extensions
                 return Task.CompletedTask;
             };
 
-            return AddTempusJob(services, when, funcHandler, noOverlap);
+            return AddTempusJob(services, when, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Func<Task> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Func<Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) => handler();
 
-            return AddTempusJob(services, when, funcHandler, noOverlap);
+            return AddTempusJob(services, when, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Func<JobExecutionContext, Task> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, DateTime when, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
-            services.AddTransient<AspNetJobWrapper>(provider => new AspNetJobWrapper($"@once {when:O}", handler, noOverlap));
+            services.AddTransient<AspNetJobWrapper>(provider => new AspNetJobWrapper($"@once {when:O}", handler, overlapHandling));
 
             return services;
         }
         
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Action handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Action handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) =>
             {
@@ -145,10 +145,10 @@ namespace Workshell.Tempus.AspNetCore.Extensions
                 return Task.CompletedTask;
             };
 
-            return AddTempusJob(services, pattern, funcHandler, noOverlap);
+            return AddTempusJob(services, pattern, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Action<JobExecutionContext> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Action<JobExecutionContext> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) =>
             {
@@ -157,19 +157,19 @@ namespace Workshell.Tempus.AspNetCore.Extensions
                 return Task.CompletedTask;
             };
 
-            return AddTempusJob(services, pattern, funcHandler, noOverlap);
+            return AddTempusJob(services, pattern, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Func<Task> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Func<Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
             Func<JobExecutionContext, Task> funcHandler = (context) => handler();
 
-            return AddTempusJob(services, pattern, funcHandler, noOverlap);
+            return AddTempusJob(services, pattern, funcHandler, overlapHandling);
         }
 
-        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Func<JobExecutionContext, Task> handler, bool noOverlap = false)
+        public static IServiceCollection AddTempusJob(this IServiceCollection services, string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
         {
-            services.AddTransient<AspNetJobWrapper>(provider => new AspNetJobWrapper(pattern, handler, noOverlap));
+            services.AddTransient<AspNetJobWrapper>(provider => new AspNetJobWrapper(pattern, handler, overlapHandling));
 
             return services;
         }

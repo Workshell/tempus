@@ -27,7 +27,17 @@ using System.Text;
 namespace Workshell.Tempus
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class NoOverlapAttribute : Attribute
+    public sealed class OverlapAttribute : Attribute
     {
+        public OverlapAttribute(OverlapHandling handling)
+        {
+            Handling = handling;
+        }
+
+        #region Properties
+
+        public OverlapHandling Handling { get; }
+
+        #endregion
     }
 }

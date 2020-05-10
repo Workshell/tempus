@@ -93,6 +93,28 @@ namespace Workshell.Tempus
             return Remove(job?.ExecutionId ?? -1);
         }
 
+        public bool Contains(IScheduledJob job)
+        {
+            _locker.EnterReadLock();
+
+            try
+            {
+                foreach (var activeJob in _jobs)
+                {
+                    if (activeJob.Job == job || activeJob.Job.Id == job.Id)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            finally
+            {
+                _locker.ExitReadLock();
+            }
+        }
+
         public IActiveJob[] ToArray(ActiveJobOrder order = ActiveJobOrder.StartedOldest)
         {
             _locker.EnterReadLock();
