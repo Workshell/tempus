@@ -38,6 +38,11 @@ namespace Workshell.Tempus
 
         public ScheduledJob(Type type)
         {
+            if (!Utils.SupportsJob(type))
+            {
+                throw new ArgumentException("Type does not support IJob.", nameof(type));
+            }
+
             var pattern = GetPattern(type);
 
             if (pattern == "@immediately")
@@ -70,6 +75,16 @@ namespace Workshell.Tempus
 
         public ScheduledJob(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
         {
+            if (string.IsNullOrWhiteSpace(pattern))
+            {
+                throw new ArgumentException("No pattern was specified.", nameof(pattern));
+            }
+
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler), "No handler was specified.");
+            }
+
             if (pattern == "@immediately")
             {
                 _cron = null;

@@ -20,6 +20,33 @@ namespace Workshell.Tempus.Tests
             _dummyHandler = (context) => Task.CompletedTask;
         }
 
+        [Test]
+        public void Constructor_With_Invalid_Type_Throws_Exception()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new ScheduledJob(typeof(String));
+            });
+        }
+
+        [Test]
+        public void Constructor_With_Invalid_Pattern_Throws_Exception()
+        {
+            Assert.Throws<ArgumentException>(() =>
+            {
+                new ScheduledJob(string.Empty, null, OverlapHandling.Allow);
+            });
+        }
+
+        [Test]
+        public void Constructor_With_Invalid_Handler_Throws_Exception()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                new ScheduledJob("@immediately", null, OverlapHandling.Allow);
+            });
+        }
+
         /* Immediate Jobs */
 
         [Test]
