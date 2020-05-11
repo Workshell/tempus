@@ -52,7 +52,7 @@ namespace Workshell.Tempus
             }
             else if (pattern.StartsWith("@once "))
             {
-                var value = pattern.Substring(0, 6);
+                var value = pattern.Remove(0, 6);
 
                 _cron = null;
                 _next = DateTime.Parse(value);
@@ -92,7 +92,7 @@ namespace Workshell.Tempus
             }
             else if (pattern.StartsWith("@once "))
             {
-                var value = pattern.Substring(0, 6);
+                var value = pattern.Remove(0, 6);
 
                 _cron = null;
                 _next = DateTime.Parse(value);

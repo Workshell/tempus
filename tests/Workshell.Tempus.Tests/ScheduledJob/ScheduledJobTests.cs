@@ -164,6 +164,14 @@ namespace Workshell.Tempus.Tests
         }
 
         [Test]
+        public void Constructor_With_Untyped_Immediate_Job_OverlapHandling_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Wait);
+
+            Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
+        }
+
+        [Test]
         public void NeedsExecuting_With_Untyped_Immediate_Job_Is_True()
         {
             var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
@@ -173,12 +181,273 @@ namespace Workshell.Tempus.Tests
             Assert.IsTrue(next ?? false);
         }
 
+        /* One-time Jobs */
+
         [Test]
-        public void Constructor_With_Untyped_Immediate_Job_OverlapHandling_Is_Correct()
+        public void Constructor_With_Typed_Once_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Wait);
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var startsWith = scheduledJob.Pattern.StartsWith("@once ");
+                
+            Assert.IsTrue(startsWith);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Once_Job_Type_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+
+            Assert.AreEqual(typeof(MockOnceJob), scheduledJob.Type);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Once_Job_Handler_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+
+            Assert.IsNull(scheduledJob.Handler);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Once_Job_IsImmediately_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+
+            Assert.IsFalse(scheduledJob.IsImmediately);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Once_Job_IsOnce_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+
+            Assert.IsTrue(scheduledJob.IsOnce);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Once_Job_IsAnonymous_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+
+            Assert.IsFalse(scheduledJob.IsAnonymous);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Once_Job_OverlapHandling_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
+        }
+
+        [Test]
+        public void NeedsExecuting_With_Typed_Once_Job_Is_True()
+        {
+            var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var next = scheduledJob.NeedsExecuting(christmas);
+
+            Assert.IsTrue(next ?? false);
+        }
+        
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_Pattern_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.AreEqual("@once 2020-12-25T00:00:00Z", scheduledJob.Pattern);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_Type_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsNull(scheduledJob.Type);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_Handler_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsNotNull(scheduledJob.Handler);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_IsImmediately_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsFalse(scheduledJob.IsImmediately);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_IsOnce_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsTrue(scheduledJob.IsOnce);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_IsAnonymous_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsTrue(scheduledJob.IsAnonymous);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Once_Job_OverlapHandling_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Wait);
+
+            Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
+        }
+
+        [Test]
+        public void NeedsExecuting_With_Untyped_Once_Job_Is_True()
+        {
+            var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var next = scheduledJob.NeedsExecuting(christmas);
+
+            Assert.IsTrue(next ?? false);
+        }
+
+        /* Cron Jobs */
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_Pattern_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+   
+            Assert.AreEqual("*/10 * * * * *", scheduledJob.Pattern);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_Type_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+
+            Assert.AreEqual(typeof(MockCronJob), scheduledJob.Type);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_Handler_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+
+            Assert.IsNull(scheduledJob.Handler);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_IsImmediately_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+
+            Assert.IsFalse(scheduledJob.IsImmediately);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_IsOnce_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+
+            Assert.IsFalse(scheduledJob.IsOnce);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_IsAnonymous_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+
+            Assert.IsFalse(scheduledJob.IsAnonymous);
+        }
+
+        [Test]
+        public void Constructor_With_Typed_Cron_Job_OverlapHandling_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+
+            Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
+        }
+
+        [Test]
+        public void NeedsExecuting_With_Typed_Cron_Job_Is_True()
+        {
+            var christmas = new DateTime(2020, 12, 25, 0, 0, 10, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var next = scheduledJob.NeedsExecuting(christmas);
+
+            Assert.IsTrue(next ?? false);
+        }
+        
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_Pattern_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.AreEqual("*/10 * * * * *", scheduledJob.Pattern);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_Type_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsNull(scheduledJob.Type);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_Handler_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsNotNull(scheduledJob.Handler);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_IsImmediately_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsFalse(scheduledJob.IsImmediately);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_IsOnce_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsFalse(scheduledJob.IsOnce);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_IsAnonymous_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+
+            Assert.IsTrue(scheduledJob.IsAnonymous);
+        }
+
+        [Test]
+        public void Constructor_With_Untyped_Cron_Job_OverlapHandling_Is_Correct()
+        {
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Wait);
+
+            Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
+        }
+
+        [Test]
+        public void NeedsExecuting_With_Untyped_Cron_Job_Is_True()
+        {
+            var christmas = new DateTime(2020, 12, 25, 0, 0, 10, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var next = scheduledJob.NeedsExecuting(christmas);
+
+            Assert.IsTrue(next ?? false);
         }
     }
 }
