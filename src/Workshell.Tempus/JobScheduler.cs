@@ -137,7 +137,7 @@ namespace Workshell.Tempus
         
         public Guid Schedule(Type type)
         {
-            if (!typeof(IJob).GetTypeInfo().IsAssignableFrom(type))
+            if (!Utils.SupportsJob(type))
             {
                 throw new ArgumentException("Type is not an IJob.", nameof(type));
             }

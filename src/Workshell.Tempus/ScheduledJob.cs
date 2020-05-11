@@ -38,6 +38,11 @@ namespace Workshell.Tempus
 
         public ScheduledJob(Type type)
         {
+            if (!Utils.SupportsJob(type))
+            {
+                throw new ArgumentException("Type does not support IJob.", nameof(type));
+            }
+
             var pattern = GetPattern(type);
 
             if (pattern == "@immediately")
@@ -47,7 +52,7 @@ namespace Workshell.Tempus
             }
             else if (pattern.StartsWith("@once "))
             {
-                var value = pattern.Substring(0, 6);
+                var value = pattern.Remove(0, 6);
 
                 _cron = null;
                 _next = DateTime.Parse(value);
@@ -70,6 +75,16 @@ namespace Workshell.Tempus
 
         public ScheduledJob(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
         {
+            if (string.IsNullOrWhiteSpace(pattern))
+            {
+                throw new ArgumentException("No pattern was specified.", nameof(pattern));
+            }
+
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler), "No handler was specified.");
+            }
+
             if (pattern == "@immediately")
             {
                 _cron = null;
@@ -77,7 +92,7 @@ namespace Workshell.Tempus
             }
             else if (pattern.StartsWith("@once "))
             {
-                var value = pattern.Substring(0, 6);
+                var value = pattern.Remove(0, 6);
 
                 _cron = null;
                 _next = DateTime.Parse(value);
@@ -95,7 +110,7 @@ namespace Workshell.Tempus
             IsImmediately = (pattern == "@immediately");
             IsOnce = pattern.StartsWith("@once ");
             IsAnonymous = true;
-            OverlapHandling = OverlapHandling.Allow;
+            OverlapHandling = overlapHandling;
         }
 
         #region Methods
