@@ -86,7 +86,6 @@ namespace Workshell.Tempus
             }
 
             Stop();
-            GC.SuppressFinalize(this);
 
             _disposed = true;
         }
@@ -211,6 +210,15 @@ namespace Workshell.Tempus
                                 var instance = scope.Create(job.Type);
 
                                 await instance.ExecuteAsync(context);
+
+                                var supportsDispose = typeof(IDisposable).IsAssignableFrom(instance.GetType());
+
+                                if (supportsDispose)
+                                {
+                                    var disposable = (IDisposable)instance;
+
+                                    disposable.Dispose();
+                                }
                             }
                         }
                         else
