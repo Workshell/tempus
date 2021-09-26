@@ -25,7 +25,7 @@ namespace Workshell.Tempus.Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new ScheduledJob(typeof(String));
+                new ScheduledJob(typeof(String), null);
             });
         }
 
@@ -34,7 +34,7 @@ namespace Workshell.Tempus.Tests
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                new ScheduledJob(string.Empty, null, OverlapHandling.Allow);
+                new ScheduledJob(string.Empty, null, OverlapHandling.Allow, null);
             });
         }
 
@@ -43,7 +43,7 @@ namespace Workshell.Tempus.Tests
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
-                new ScheduledJob("@immediately", null, OverlapHandling.Allow);
+                new ScheduledJob("@immediately", null, OverlapHandling.Allow, null);
             });
         }
 
@@ -52,7 +52,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.AreEqual("@immediately", scheduledJob.Pattern);
         }
@@ -60,7 +60,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_Type_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.AreEqual(typeof(MockImmediateJob), scheduledJob.Type);
         }
@@ -68,7 +68,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_Handler_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.IsNull(scheduledJob.Handler);
         }
@@ -76,7 +76,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_IsImmediately_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.IsTrue(scheduledJob.IsImmediately);
         }
@@ -84,7 +84,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_IsOnce_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.IsFalse(scheduledJob.IsOnce);
         }
@@ -92,7 +92,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_IsAnonymous_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.IsFalse(scheduledJob.IsAnonymous);
         }
@@ -100,7 +100,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Immediate_Job_OverlapHandling_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
         }
@@ -108,8 +108,8 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void NeedsExecuting_With_Typed_Immediate_Job_Is_True()
         {
-            var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
-            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob));
+            var christmas = new DateTime(2400, 12, 25, 0, 0, 0, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob(typeof(MockImmediateJob), null);
             var next = scheduledJob.NeedsExecuting(christmas);
 
             Assert.IsTrue(next ?? false);
@@ -118,7 +118,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.AreEqual("@immediately", scheduledJob.Pattern);
         }
@@ -126,7 +126,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_Type_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsNull(scheduledJob.Type);
         }
@@ -134,7 +134,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_Handler_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsNotNull(scheduledJob.Handler);
         }
@@ -142,7 +142,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_IsImmediately_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsTrue(scheduledJob.IsImmediately);
         }
@@ -150,7 +150,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_IsOnce_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsFalse(scheduledJob.IsOnce);
         }
@@ -158,7 +158,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_IsAnonymous_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsTrue(scheduledJob.IsAnonymous);
         }
@@ -166,7 +166,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Immediate_Job_OverlapHandling_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Wait);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Wait, null);
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
         }
@@ -174,8 +174,8 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void NeedsExecuting_With_Untyped_Immediate_Job_Is_True()
         {
-            var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
-            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow);
+            var christmas = new DateTime(2400, 12, 25, 0, 0, 0, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob("@immediately", _dummyHandler, OverlapHandling.Allow, null);
             var next = scheduledJob.NeedsExecuting(christmas);
 
             Assert.IsTrue(next ?? false);
@@ -186,7 +186,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
             var startsWith = scheduledJob.Pattern.StartsWith("@once ");
                 
             Assert.IsTrue(startsWith);
@@ -195,7 +195,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_Type_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
 
             Assert.AreEqual(typeof(MockOnceJob), scheduledJob.Type);
         }
@@ -203,7 +203,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_Handler_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
 
             Assert.IsNull(scheduledJob.Handler);
         }
@@ -211,7 +211,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_IsImmediately_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
 
             Assert.IsFalse(scheduledJob.IsImmediately);
         }
@@ -219,7 +219,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_IsOnce_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
 
             Assert.IsTrue(scheduledJob.IsOnce);
         }
@@ -227,7 +227,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_IsAnonymous_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
 
             Assert.IsFalse(scheduledJob.IsAnonymous);
         }
@@ -235,7 +235,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Once_Job_OverlapHandling_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
         }
@@ -243,8 +243,8 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void NeedsExecuting_With_Typed_Once_Job_Is_True()
         {
-            var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
-            var scheduledJob = new ScheduledJob(typeof(MockOnceJob));
+            var christmas = new DateTime(2400, 12, 25, 0, 0, 0, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob(typeof(MockOnceJob), null);
             var next = scheduledJob.NeedsExecuting(christmas);
 
             Assert.IsTrue(next ?? false);
@@ -253,15 +253,15 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Once_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
 
-            Assert.AreEqual("@once 2020-12-25T00:00:00Z", scheduledJob.Pattern);
+            Assert.AreEqual("@once 2400-12-25T00:00:00Z", scheduledJob.Pattern);
         }
 
         [Test]
         public void Constructor_With_Untyped_Once_Job_Type_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsNull(scheduledJob.Type);
         }
@@ -269,7 +269,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Once_Job_Handler_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsNotNull(scheduledJob.Handler);
         }
@@ -277,7 +277,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Once_Job_IsImmediately_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsFalse(scheduledJob.IsImmediately);
         }
@@ -285,7 +285,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Once_Job_IsOnce_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsTrue(scheduledJob.IsOnce);
         }
@@ -293,7 +293,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Once_Job_IsAnonymous_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsTrue(scheduledJob.IsAnonymous);
         }
@@ -301,7 +301,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Once_Job_OverlapHandling_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Wait);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Wait, null);
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
         }
@@ -309,8 +309,8 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void NeedsExecuting_With_Untyped_Once_Job_Is_True()
         {
-            var christmas = new DateTime(2020, 12, 25, 0, 0, 0, DateTimeKind.Utc);
-            var scheduledJob = new ScheduledJob("@once 2020-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow);
+            var christmas = new DateTime(2400, 12, 25, 0, 0, 0, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob("@once 2400-12-25T00:00:00Z", _dummyHandler, OverlapHandling.Allow, null);
             var next = scheduledJob.NeedsExecuting(christmas);
 
             Assert.IsTrue(next ?? false);
@@ -321,7 +321,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
    
             Assert.AreEqual("*/10 * * * * *", scheduledJob.Pattern);
         }
@@ -329,7 +329,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_Type_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
 
             Assert.AreEqual(typeof(MockCronJob), scheduledJob.Type);
         }
@@ -337,7 +337,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_Handler_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
 
             Assert.IsNull(scheduledJob.Handler);
         }
@@ -345,7 +345,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_IsImmediately_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
 
             Assert.IsFalse(scheduledJob.IsImmediately);
         }
@@ -353,7 +353,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_IsOnce_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
 
             Assert.IsFalse(scheduledJob.IsOnce);
         }
@@ -361,7 +361,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_IsAnonymous_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
 
             Assert.IsFalse(scheduledJob.IsAnonymous);
         }
@@ -369,7 +369,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Typed_Cron_Job_OverlapHandling_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
         }
@@ -377,8 +377,8 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void NeedsExecuting_With_Typed_Cron_Job_Is_True()
         {
-            var christmas = new DateTime(2020, 12, 25, 0, 0, 10, DateTimeKind.Utc);
-            var scheduledJob = new ScheduledJob(typeof(MockCronJob));
+            var christmas = new DateTime(2400, 12, 25, 0, 0, 10, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob(typeof(MockCronJob), null);
             var next = scheduledJob.NeedsExecuting(christmas);
 
             Assert.IsTrue(next ?? false);
@@ -387,7 +387,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_Pattern_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.AreEqual("*/10 * * * * *", scheduledJob.Pattern);
         }
@@ -395,7 +395,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_Type_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsNull(scheduledJob.Type);
         }
@@ -403,7 +403,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_Handler_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsNotNull(scheduledJob.Handler);
         }
@@ -411,7 +411,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_IsImmediately_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsFalse(scheduledJob.IsImmediately);
         }
@@ -419,7 +419,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_IsOnce_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsFalse(scheduledJob.IsOnce);
         }
@@ -427,7 +427,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_IsAnonymous_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
 
             Assert.IsTrue(scheduledJob.IsAnonymous);
         }
@@ -435,7 +435,7 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void Constructor_With_Untyped_Cron_Job_OverlapHandling_Is_Correct()
         {
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Wait);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Wait, null);
 
             Assert.AreEqual(OverlapHandling.Wait, scheduledJob.OverlapHandling);
         }
@@ -443,8 +443,8 @@ namespace Workshell.Tempus.Tests
         [Test]
         public void NeedsExecuting_With_Untyped_Cron_Job_Is_True()
         {
-            var christmas = new DateTime(2020, 12, 25, 0, 0, 10, DateTimeKind.Utc);
-            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow);
+            var christmas = new DateTime(2400, 12, 25, 0, 0, 10, DateTimeKind.Utc);
+            var scheduledJob = new ScheduledJob("*/10 * * * * *", _dummyHandler, OverlapHandling.Allow, null);
             var next = scheduledJob.NeedsExecuting(christmas);
 
             Assert.IsTrue(next ?? false);

@@ -42,7 +42,7 @@ namespace Workshell.Tempus
 
         #region Methods
 
-        public IScheduledJob Add(Type type)
+        public IScheduledJob Add(Type type, object state)
         {
             _locker.EnterUpgradeableReadLock();
 
@@ -59,7 +59,7 @@ namespace Workshell.Tempus
 
                 try
                 {
-                    var job = new ScheduledJob(type);
+                    var job = new ScheduledJob(type, state);
 
                     _jobs.Add(job);
 
@@ -76,9 +76,9 @@ namespace Workshell.Tempus
             }
         }
 
-        public IScheduledJob Add(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
+        public IScheduledJob Add(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling, object state)
         {
-            var job = new ScheduledJob(pattern, handler, overlapHandling);
+            var job = new ScheduledJob(pattern, handler, overlapHandling, state);
 
             _locker.EnterWriteLock();
 

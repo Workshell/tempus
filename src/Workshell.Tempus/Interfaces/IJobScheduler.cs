@@ -38,8 +38,8 @@ namespace Workshell.Tempus
 
         void Start();
         void Stop(bool wait = false);
-        Guid Schedule(Type type);
-        Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow);
+        Guid Schedule(Type type, object state = null);
+        Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow, object state = null);
         bool Unschedule(Guid id);
 
         #endregion

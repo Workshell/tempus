@@ -134,26 +134,26 @@ namespace Workshell.Tempus
             OnStopped();
         }
         
-        public Guid Schedule(Type type)
+        public Guid Schedule(Type type, object state)
         {
             if (!Utils.SupportsJob(type))
             {
                 throw new ArgumentException("Type is not an IJob.", nameof(type));
             }
 
-            var job = _jobs.Add(type);
+            var job = _jobs.Add(type, state);
 
             return job.Id;
         }
         
-        public Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow)
+        public Guid Schedule(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling = OverlapHandling.Allow, object state = null)
         {
             if (handler == null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            var job = _jobs.Add(pattern, handler, overlapHandling);
+            var job = _jobs.Add(pattern, handler, overlapHandling, state);
 
             return job.Id;
         }

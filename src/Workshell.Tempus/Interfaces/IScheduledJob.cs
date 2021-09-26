@@ -37,6 +37,7 @@ namespace Workshell.Tempus
         bool IsOnce { get; }
         bool IsAnonymous { get; }
         OverlapHandling OverlapHandling { get; }
+        object State { get; set; }
 
         #endregion
     }
