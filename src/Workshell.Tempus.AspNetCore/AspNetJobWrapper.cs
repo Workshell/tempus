@@ -30,7 +30,7 @@ namespace Workshell.Tempus.AspNetCore
 {
     internal sealed class AspNetJobWrapper
     {
-        public AspNetJobWrapper(Type type)
+        public AspNetJobWrapper(Type type, object state)
         {
             if (!typeof(IJob).GetTypeInfo().IsAssignableFrom(type))
             {
@@ -40,14 +40,16 @@ namespace Workshell.Tempus.AspNetCore
             Pattern = null;
             Type = type;
             Handler = null;
+            State = state;
         }
 
-        public AspNetJobWrapper(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
+        public AspNetJobWrapper(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling, object state)
         {
             Pattern = pattern;
             Type = null;
             Handler = handler;
             OverlapHandling = overlapHandling;
+            State = state;
         }
 
         #region Properties
@@ -56,6 +58,7 @@ namespace Workshell.Tempus.AspNetCore
         public Type Type { get; }
         public Func<JobExecutionContext, Task> Handler { get; }
         public OverlapHandling OverlapHandling { get; }
+        public object State { get; }
 
         #endregion
     }

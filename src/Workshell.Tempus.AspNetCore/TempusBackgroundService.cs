@@ -47,7 +47,7 @@ namespace Workshell.Tempus.AspNetCore
                 }
                 else
                 {
-                    scheduler.Schedule(wrapper.Pattern, wrapper.Handler, wrapper.OverlapHandling);
+                    scheduler.Schedule(wrapper.Pattern, wrapper.Handler, wrapper.OverlapHandling, wrapper.State);
                 }
             }
 

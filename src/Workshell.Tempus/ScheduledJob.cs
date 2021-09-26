@@ -36,7 +36,7 @@ namespace Workshell.Tempus
         private readonly CronExpression _cron;
         private DateTime? _next;
 
-        public ScheduledJob(Type type)
+        public ScheduledJob(Type type, object state)
         {
             if (!Utils.SupportsJob(type))
             {
@@ -71,9 +71,10 @@ namespace Workshell.Tempus
             IsOnce = pattern.StartsWith("@once ");
             IsAnonymous = false;
             OverlapHandling = GetOverlapHandling(type);
+            State = state;
         }
 
-        public ScheduledJob(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling)
+        public ScheduledJob(string pattern, Func<JobExecutionContext, Task> handler, OverlapHandling overlapHandling, object state)
         {
             if (string.IsNullOrWhiteSpace(pattern))
             {
@@ -111,6 +112,7 @@ namespace Workshell.Tempus
             IsOnce = pattern.StartsWith("@once ");
             IsAnonymous = true;
             OverlapHandling = overlapHandling;
+            State = state;
         }
 
         #region Methods
@@ -225,6 +227,7 @@ namespace Workshell.Tempus
         public bool IsOnce { get; }
         public bool IsAnonymous { get; }
         public OverlapHandling OverlapHandling { get; }
+        public object State { get; set; }
 
         #endregion
     }
