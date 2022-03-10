@@ -10,24 +10,24 @@ This is a class library for scheduling and executing jobs in a similar vain to H
 
 Stable builds are available as NuGet packages. You can install it via the Package Manager or via the Package Manager Console:
 
-```
-Install-Package Workshell.Tempus
-Install-Package Workshell.Tempus.AspNetCore // If you're using ASP.NET Core
-```
+````
+> Install-Package Workshell.Tempus
+> Install-Package Workshell.Tempus.AspNetCore // If you're using ASP.NET Core
+````
 
 ## Scheduler Setup
 
 The scheduler is a singleton instance that manages all jobs. To create it it's as simple as:
 
-```
+````csharp
 var scheduler = JobScheduler.Create();
-```
+````
 
 After that it's necessary to start the scheduler, again another one-liner:
 
-```
+````csharp
 scheduler.Start();
-```
+````
 
 The scheduler has a timing resolution of 1 second so you can't create schedules smaller than this granularity.
 
@@ -45,7 +45,7 @@ An immediate job is placed in the schedule and executed as soon as possible.
 
 You can use a class and register it with the scheduler like below:
 
-```
+````csharp
 class SomeJob : IJob
 {
     public Task ExecuteAsync(JobExecutionContext context)
@@ -57,36 +57,36 @@ class SomeJob : IJob
 }
 
 scheduler.Schedule<SomeJob>();
-```
+````
 
 Using an `Action`:
 
-```
+````csharp
 scheduler.Schedule((context) => 
 {
     // Do some work
 });
-```
+````
 
 Using a `Func`:
 
-```
+````csharp
 scheduler.Schedule((context) => 
 {
     // Do some work
 
     return Task.CompletedTask;
 });
-```
+````
 
 Or...
 
-```
+````csharp
 scheduler.Schedule(async (context) => 
 {
     // Do some work
 });
-```
+````
 
 ## One-time Jobs
 
@@ -94,7 +94,7 @@ A one-time job has a static execution point in the future, say 00:00 Christmas D
 
 Using a class:
 
-```
+````csharp
 [Once("2020-12-25T00:00:00Z")] // Note the attribute
 class SomeJob : IJob
 {
@@ -107,22 +107,22 @@ class SomeJob : IJob
 }
 
 scheduler.Schedule<SomeJob>();
-```
+````
 
 Using an `Action`:
 
-```
+````csharp
 var when = DateTime.Parse("2020-12-25T00:00:00Z");
 
 scheduler.Schedule(when, (context) => 
 {
     // Do some work
 });
-```
+````
 
 Using a `Func`:
 
-```
+````csharp
 var when = DateTime.Parse("2020-12-25T00:00:00Z");
 
 scheduler.Schedule(when, (context) => 
@@ -131,18 +131,18 @@ scheduler.Schedule(when, (context) =>
 
     return Task.CompletedTask;
 });
-```
+````
 
 Or...
 
-```
+````csharp
 var when = DateTime.Parse("2020-12-25T00:00:00Z");
 
 scheduler.Schedule(when, async (context) => 
 {
     // Do some work
 });
-```
+````
 
 ## Interval Jobs
 
@@ -150,7 +150,7 @@ Interval jobs run on a schedule for example, every 30 seconds.
 
 Using a class:
 
-```
+````csharp
 [Cron("*/30 * * * * *")] // Note the attribute
 class SomeJob : IJob
 {
@@ -163,36 +163,36 @@ class SomeJob : IJob
 }
 
 scheduler.Schedule<SomeJob>();
-```
+````
 
 Using an `Action`:
 
-```
+````csharp
 scheduler.Schedule("*/30 * * * * *", (context) => 
 {
     // Do some work
 });
-```
+````
 
 Using a `Func`:
 
-```
+````csharp
 scheduler.Schedule("*/30 * * * * *", (context) => 
 {
     // Do some work
 
     return Task.CompletedTask;
 });
-```
+````
 
 Or...
 
-```
+````csharp
 scheduler.Schedule("*/30 * * * * *", async (context) => 
 {
     // Do some work
 });
-```
+````
 
 ## Overlapping
 
@@ -208,13 +208,13 @@ By default the scheduler will allow overlapped executions, however you can overr
 
 With classes you can just add the `[Overlap]` attribute to the class that implements the IJob you want to change the overlap behaviour, and specify a value from the `OverlapHandling` enum:
 
-```
+````csharp
 [Overlap(OverlapHandling.Skip)]
 class SomeJob : IJob
 {
     ...
 }
-```
+````
 
 For `Action` and `Func` methods that's a `overlapHandling` parameter you can set.
 
@@ -224,30 +224,30 @@ We have an integration package for ASP.NET Core which makes using Tempus very ea
 
 To add in the scheduler and everything needed, in `ConfigureServices` you can do:
 
-```
+````csharp
 services.AddTempus();
-```
+````
 
 This will register the `IJobScheduler` as a singleton along with support infrastructure such as an `IHostedService` which will hook into starting and stopping the scheduler as needed.
 
 Then to register jobs, for a class:
 
-```
+````csharp
 services.AddTempusJob<SomeJob>();
-```
+````
 
 For an `Action` or `Func`:
 
-```
+````csharp
 services.AddTempusJob("*/10 * * * * *", () =>
 {
     // Do some work
 });
-```
+````
 
 You can also then pick up the core interfaces in other classes through depedency injection, for example:
 
-```
+````csharp
 class SomeOtherClass
 {
     public SomeOtherClass(IJobScheduler scheduler)
@@ -255,7 +255,7 @@ class SomeOtherClass
         ...
     }
 }
-```
+````
 
 ## Cron Format
 
